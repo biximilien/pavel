@@ -1,0 +1,7 @@
+!*/.gitkeep
+
+pavel/src/*
+!pavel/src/.gitkeep
+
+pavel/dist/*
+!pavel/dist/.gitkeep
