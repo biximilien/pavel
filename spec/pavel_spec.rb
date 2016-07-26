@@ -34,15 +34,4 @@ RSpec.describe Pavel do
     end
   end
 
-  # Dir.glob(Pavel.path + '/**/*.html') do |file|
-  #   describe file do
-  #     document = Nokogiri::HTML(open(file))
-  #
-  #     it "links to existing resources" do
-  #       document.css('a').each do |link|
-  #         expect(File.exist(Pavel.path + URI.parse(link.attribute('href').to_s).path)).to be_true
-  #       end
-  #     end
-  #   end
-  # end
 end

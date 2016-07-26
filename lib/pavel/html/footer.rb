@@ -1,25 +1,16 @@
-module Pavel
-  module HTML
-    class Footer
-      attr_accessor :document
+class Pavel::HTML::Footer < Pavel::HTML::Element
 
-      def initialize(document)
-        @document = document
+  def remove
+    @footer ||= @document.css('footer').first
+
+    if @footer
+      @footer.content = ''
+      if @footer.children
+        @footer.children.remove
       end
-
-      def remove
-        @footer ||= @document.css('footer').first
-
-        if @footer
-          @footer.content = ''
-          if @footer.children
-            @footer.children.remove
-          end
-        end
-
-        self
-      end
-
     end
+
+    self
   end
+
 end
