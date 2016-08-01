@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'uri'
 
 module Pavel
+  autoload :Linator,   'pavel/linator'
   autoload :Directory, 'pavel/directory'
 
   module HTML
@@ -32,6 +33,10 @@ module Pavel
     def target
       { path: 'pavel/dist',
         encoding: 'UTF-8' }
+    end
+
+    def verbose
+      false
     end
   end
 

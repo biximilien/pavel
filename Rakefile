@@ -33,7 +33,7 @@ task :rspec do
       it "links to existing resources" do
         document.css('a').each do |link|
           if link.attribute('rel').to_s != 'external'
-            expect(File.exist?(Pavel.target[:path] + URI.parse(link.attribute('href').to_s).path)).to be true
+            expect(File.exist?("#{Pavel.target[:path]}/#{URI.parse(link.attribute('href').to_s).path}")).to be true
           end
         end
       end
