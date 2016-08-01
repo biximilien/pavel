@@ -5,11 +5,19 @@ class Pavel::Directory
       File.directory?(source)
     end
 
+    def temp_exists?
+      File.directory?(temp)
+    end
+
     def target_exists?
       File.directory?(target)
     end
 
     private
+
+      def temp
+        Pavel.temp[:path]
+      end
 
       def source
         Pavel.source[:path]

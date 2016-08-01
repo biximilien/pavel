@@ -14,13 +14,7 @@ module Pavel::Linator
   end
 
   def copy_file(source_filename, target_filename)
-    # print "Copying #{source_filename}..."
     FileUtils.cp(source_filename, target_filename, verbose: Pavel.verbose)
-    # puts " Done."
-  rescue => error
-    puts "SOURCE FILENAME: #{source_filename}"
-    puts "TARGET FILENAME: #{target_filename}"
-    raise error
   end
 
   def make_directory_if_not_exist(filename)
@@ -30,6 +24,10 @@ module Pavel::Linator
       FileUtils.mkdir_p(dirname, verbose: Pavel.verbose)
       # puts " Done."
     end
+  end
+
+  def clean_src_dir
+    raise "[DANGER] NOT IMPLEMENTED UNTIL CODE IS ACTUALLY PUSHED ON A REPO"
   end
 
   def clean_temp_dir
@@ -101,5 +99,52 @@ module Pavel::Linator
       file.write(document.to_html)
     end
   end
+
+  def traverse(queue, visited, root)
+    visited.push root
+    document = Nokogiri::HTML(open(root))
+    puts "Traversing #{root}..."
+    traverse_document(queue, visited, document)
+
+    while queue.length > 0
+      filename = queue.pop
+      visited.push(filename) if !visited.include?(filename)
+
+      if File.extname(filename) =~ /\.(?:html|htm)$/i
+        document = Nokogiri::HTML(open(filename))
+        puts "Traversing #{filename}..."
+        traverse_document(queue, visited, document)
+      end
+    end
+  end
+
+  def traverse_document(queue, visited, document)
+    document.css(Pavel.resources_tags).each do |resource|
+      case resource.name
+      when 'a', 'link'
+        next if href_invalid?(resource)
+        filename = "#{Pavel.temp[:path]}/#{URI.parse(resource.attribute('href').to_s).path}"
+        queue.push(filename) if file_valid?(filename) && !visited.include?(filename) && !queue.include?(filename)
+      when 'script', 'img'
+        next if src_invalid?(resource)
+        filename = "#{Pavel.temp[:path]}/#{URI.parse(resource.attribute('src').to_s).path}"
+        queue.push(filename) if file_valid?(filename) && !visited.include?(filename) && !queue.include?(filename)
+      end
+    end
+  end
+
+  private
+
+    def src_invalid?(img_or_script_tag)
+      img_or_script_tag.attribute('src').nil? || img_or_script_tag.attribute('src').to_s.empty?
+    end
+
+    def href_invalid?(a_or_link_tag)
+      a_or_link_tag.attribute('href').nil? || a_or_link_tag.attribute('href').to_s.empty?
+    end
+
+    def file_valid?(filename)
+      File.exist?(filename) && !File.directory?(filename)
+    end
 
 end

@@ -7,6 +7,8 @@ require 'rubygems'
 require 'bundler/setup'
 require 'pavel'
 
+Rake.add_rakelib 'lib/tasks'
+
 task :default => [:build, :rspec]
 
 desc "Builds distribution"

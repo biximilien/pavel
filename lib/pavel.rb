@@ -38,6 +38,14 @@ module Pavel
     def verbose
       false
     end
+
+    def extensions
+      %w(html htm ico css eot gif jpg js mp4 pdf png ttf woff xml).join(',')
+    end
+
+    def resources_tags
+      %w(a script link img).join(',')
+    end
   end
 
 end

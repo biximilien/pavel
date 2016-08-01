@@ -13,8 +13,10 @@ require 'pavel'
 include Pavel::Linator
 
 puts "[ PAVELLINATOR ] - Starting... \n\n"
+
 begin
 
+  clean_temp_dir
   clean_target_dir
 
   """
@@ -23,7 +25,7 @@ begin
 
   puts "[ PAVELLINATOR ] - Processing stage 1... \n\n"
 
-  Dir.glob(Pavel.source[:path] + "/**/*.{html,ico,css,eot,gif,jpg,js,mp4,pdf,png,ttf,woff,xml}") do |filename|
+  Dir.glob(Pavel.source[:path] + "/**/*.{#{Pavel.extensions}}") do |filename|
     case filename
 
     # When HTML files
@@ -73,28 +75,7 @@ begin
   visited = []
   queue = []
 
-  document = Nokogiri::HTML(open(root))
-  visited.push root
-
-  document.css('a').each do |link|
-    next if link.attribute('href').nil? || link.attribute('href').to_s.empty?
-    filename = "#{Pavel.temp[:path]}/#{URI.parse(link.attribute('href').to_s).path}"
-    queue.push(filename) if File.exist?(filename) && !visited.include?(filename) && !queue.include?(filename)
-  end
-
-  while queue.length > 0
-    filename = queue.pop
-    puts "Traversing #{filename}..."
-
-    document = Nokogiri::HTML(open(filename))
-    visited.push(filename) if !visited.include?(filename)
-
-    document.css('a').each do |link|
-      next if link.attribute('href').nil? || link.attribute('href').to_s.empty?
-      filename = "#{Pavel.temp[:path]}/#{URI.parse(link.attribute('href').to_s).path}"
-      queue.push(filename) if File.exist?(filename) && !visited.include?(filename) && !queue.include?(filename)
-    end
-  end
+  traverse(queue, visited, root)
 
   """
     PHASE 3 : Copy core files to dist
@@ -104,15 +85,13 @@ begin
 
   copy_files(visited, Pavel.temp[:path], Pavel.target[:path])
 
-rescue => error
+rescue StandardError => e
 
   puts "[ PAVELLINATOR ] - Something went wrong! \n\n"
 
-  puts error.backtrace
+  puts e.backtrace
 
-  puts "[ PAVELLINATOR ] - Terminating (ERROR 1)."
-
-  exit 1
+  raise
 
 ensure
 
@@ -124,4 +103,4 @@ end
 
 puts "[ PAVELLINATOR ] - Terminating."
 
-exit 0
+exit
