@@ -2,21 +2,21 @@ namespace "clean" do
   directory "pavel/src"
   desc "removes all files from 'pavel/src' directory"
   task "src" => "pavel/src" do
-    include Pavel::Linator
+    include Pavel::Linter
     clean_src_dir
   end
 
   directory "pavel/temp"
   desc "removes all files from 'pavel/temp' directory"
   task "temp" => "pavel/temp" do
-    include Pavel::Linator
+    include Pavel::Linter
     clean_temp_dir
   end
 
   directory "pavel/dist"
   desc "removes all files from 'pavel/dist' directory"
   task "dist" => "pavel/dist" do
-    include Pavel::Linator
+    include Pavel::Linter
     clean_target_dir
   end
 

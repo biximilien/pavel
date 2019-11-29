@@ -1,32 +1,31 @@
-class Pavel::Directory
+module Pavel
+  class Directory
+    attr_accessor :path
 
-  class << self
-    def source_exists?
-      File.directory?(source)
+    def initialize(path)
+      @path = path
     end
 
-    def temp_exists?
-      File.directory?(temp)
+    def exist?
+      File.directory?(@path)
     end
 
-    def target_exists?
-      File.directory?(target)
+    def clean
+      Dir.glob(@path + '/*') do |filename|
+        FileUtils.rm_rf(filename, verbose: Pavel[:verbose])
+      end
     end
 
-    private
+    def self.source
+      new(Pavel[:source][:path])
+    end
 
-      def temp
-        Pavel.temp[:path]
-      end
+    def self.temp
+      new(Pavel[:temp][:path])
+    end
 
-      def source
-        Pavel.source[:path]
-      end
-
-      def target
-        Pavel.target[:path]
-      end
-
+    def self.target
+      new(Pavel[:target][:path])
+    end
   end
-
 end

@@ -3,49 +3,38 @@ require 'nokogiri'
 require 'uri'
 
 module Pavel
-  autoload :Linator,   'pavel/linator'
-  autoload :Directory, 'pavel/directory'
+  autoload :Linter,        'pavel/linter'
+  autoload :Directory,     'pavel/directory'
+  autoload :Configuration, 'pavel/configuration'
 
   module HTML
-    autoload :Element, 'pavel/html/element'
-    autoload :Header,  'pavel/html/header'
-    autoload :Footer,  'pavel/html/footer'
-    autoload :A,       'pavel/html/a'
-    autoload :Div,     'pavel/html/div'
-    autoload :Nav,     'pavel/html/nav'
-    autoload :H1,      'pavel/html/h1'
-    autoload :Title,   'pavel/html/title'
-    autoload :Comment, 'pavel/html/comment'
-    autoload :DL,      'pavel/html/dl'
+    autoload :Element,     'pavel/html/element'
+    autoload :Header,      'pavel/html/header'
+    autoload :Footer,      'pavel/html/footer'
+    autoload :A,           'pavel/html/a'
+    autoload :Div,         'pavel/html/div'
+    autoload :Nav,         'pavel/html/nav'
+    autoload :H1,          'pavel/html/h1'
+    autoload :Title,       'pavel/html/title'
+    autoload :Comment,     'pavel/html/comment'
+    autoload :DL,          'pavel/html/dl'
+    autoload :Fragment,    'pavel/html/fragment'
+    autoload :Middle,      'pavel/html/middle'
+    autoload :Body,        'pavel/html/body'
+    autoload :Head,        'pavel/html/head'
   end
 
   class << self
-    def source
-      { path: 'pavel/src/www.bt-tb.tpsgc-pwgsc.gc.ca',
-        encoding: 'UTF-8' }
-    end
+    attr_accessor :configuration
+  end
 
-    def temp
-      { path: 'pavel/temp',
-        encoding: 'UTF-8' }
-    end
+  def self.configure
+    self.configuration ||= Configuration.new
+    yield configuration
+  end
 
-    def target
-      { path: 'pavel/dist',
-        encoding: 'UTF-8' }
-    end
-
-    def verbose
-      false
-    end
-
-    def extensions
-      %w(html htm ico css eot gif jpg js mp4 pdf png ttf woff xml).join(',')
-    end
-
-    def resources_tags
-      %w(a script link img).join(',')
-    end
+  def self.[] attribute
+    @configuration[attribute]
   end
 
 end

@@ -1,15 +1,35 @@
 require 'spec_helper'
 
-RSpec.describe Pavel::Directory do
-  describe ".source_exists?" do
-    it "returns true if source directory is present" do
-      expect(Pavel::Directory.source_exists?).to be true
+module Pavel
+  RSpec.describe Directory do
+    describe ".temp" do
+      it "returns the 'temp' directory" do
+        expect(Directory.temp).to be_a(Directory)
+        expect(Directory.temp.path).to eql(Pavel[:temp][:path])
+      end
     end
-  end
 
-  describe ".target_exists?" do
-    it "returns true if target directory is present" do
-      expect(Pavel::Directory.target_exists?).to be true
+    describe ".source" do
+      it "returns the 'source' directory" do
+        expect(Directory.source).to be_a(Directory)
+        expect(Directory.source.path).to eql(Pavel[:source][:path])
+      end
     end
+
+    describe ".target" do
+      it "returns the 'target' directory" do
+        expect(Directory.target).to be_a(Directory)
+        expect(Directory.target.path).to eql(Pavel[:target][:path])
+      end
+    end
+
+    describe "#exist?" do
+      it "returns true if the directory exists" do
+        expect(Directory.source.exist?).to be true
+        expect(Directory.target.exist?).to be true
+        expect(Directory.temp.exist?).to be true
+      end
+    end
+
   end
 end
