@@ -3,9 +3,11 @@ GEM
   specs:
     diff-lcs (1.4.4)
     ffaker (2.17.0)
-    mini_portile2 (2.4.0)
-    nokogiri (1.10.10)
-      mini_portile2 (~> 2.4.0)
+    mini_portile2 (2.5.0)
+    nokogiri (1.11.0.rc4)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
+    racc (1.5.2)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -25,7 +27,7 @@ PLATFORMS
 
 DEPENDENCIES
   ffaker
-  nokogiri
+  nokogiri (>= 1.11.0.rc4)
   rspec
 
 BUNDLED WITH
